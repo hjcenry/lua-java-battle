@@ -120,38 +120,16 @@ public class LuaJEngine implements ILuaJEngine {
     }
 
     @Override
-    public boolean invokeMsg(LuaFunction luaFunction, LuaValue fightCoreLua, int uid, int header, LuaTable paramLuaTable) {
-        if (luaFunction == null) {
-            log.error("invoke.err", new LuaException("invoke luaFunction null"));
-            return false;
-        }
-        LuaValue uidValue = uid == 0 ? LuaValue.NIL : LuaValue.valueOf(uid);
-        LuaValue headerValue = header == 0 ? LuaValue.NIL : LuaValue.valueOf(header);
-
-        try {
-            Varargs result = luaFunction.invoke(new LuaValue[]{fightCoreLua, uidValue, headerValue, paramLuaTable});
-            if (result == null) {
-                log.error("invoke.err", new LuaException("luaFunction invoke result null"));
-                return false;
-            }
-            return true;
-        } catch (org.luaj.vm2.LuaError luaError) {
-            log.error(LuaLogTool.traceback(luaError, luaError.getMessage()));
-            return false;
-        }
-    }
-
-    @Override
-    public Varargs invokeLua(Globals globals, String funcName, Varargs varargs) {
+    public Varargs invokeLua(Globals globals, String luaModel, Varargs varargs) {
         if (globals == null) {
             globals = createLuaGlobals();
         }
-        LuaFunction luaFunction = getLuaFunction(globals, funcName);
-        if (luaFunction == null) {
+        LuaValue luaValue = getLuaObj(globals, luaModel);
+        if (luaValue == null) {
             return null;
         }
         try {
-            return luaFunction.invoke(varargs);
+            return luaValue.invoke(varargs);
         } catch (org.luaj.vm2.LuaError luaError) {
             log.error(LuaLogTool.traceback(luaError, luaError.getMessage()));
             return null;
@@ -159,16 +137,16 @@ public class LuaJEngine implements ILuaJEngine {
     }
 
     @Override
-    public Varargs invokeLua(LuaFunction luaFunction, Varargs varargs) {
-        if (luaFunction == null) {
+    public Varargs invokeLua(LuaValue luaValue, Varargs varargs) {
+        if (luaValue == null) {
             log.error("invoke.err", new LuaException("invoke luaFunction null"));
             return null;
         }
         try {
             if (varargs == null) {
-                return luaFunction.invoke();
+                return luaValue.invoke();
             }
-            return luaFunction.invoke(varargs);
+            return luaValue.invoke(varargs);
         } catch (Exception luaError) {
             log.error(LuaLogTool.traceback(luaError, luaError.getMessage()));
             return null;

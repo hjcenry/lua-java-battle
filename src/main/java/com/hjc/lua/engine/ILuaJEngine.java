@@ -81,35 +81,23 @@ public interface ILuaJEngine {
     LuaValue callScript(Globals globals, String script);
 
     /**
-     * 调用Lua方法
-     *
-     * @param luaFunction   lua方法
-     * @param fightCoreLua  战斗核心
-     * @param uid           玩家id
-     * @param header        协议号
-     * @param paramLuaTable 方法参数
-     * @return 调用是否成功
-     */
-    boolean invokeMsg(LuaFunction luaFunction, LuaValue fightCoreLua, int uid, int header, LuaTable paramLuaTable);
-
-    /**
      * 调用lua方法
      * <p>原始调用：无任何封装和规范的方法，可自行发挥</p>
      *
      * @param globals  全局对象
-     * @param funcName lua方法名
+     * @param luaModel lua模块
      * @param varargs  参数
      * @return {@link Varargs}
      */
-    Varargs invokeLua(Globals globals, String funcName, Varargs varargs);
+    Varargs invokeLua(Globals globals, String luaModel, Varargs varargs);
 
     /**
      * 调用lua方法
      * <p>原始调用：无任何封装和规范的方法，可自行发挥</p>
      *
-     * @param luaFunction lua方法
-     * @param varargs     参数
+     * @param luaValue lua对象
+     * @param varargs  参数
      * @return {@link Varargs}
      */
-    Varargs invokeLua(LuaFunction luaFunction, Varargs varargs);
+    Varargs invokeLua(LuaValue luaValue, Varargs varargs);
 }
