@@ -4,13 +4,18 @@ import com.hjc.lua.LuaBattleManager;
 import com.hjc.lua.LuaInit;
 import com.hjc.lua.exception.LuaException;
 import com.hjc.util.NamedThreadFactory;
-import org.luaj.vm2.*;
+import org.luaj.vm2.LuaFunction;
+import org.luaj.vm2.LuaNumber;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -152,14 +157,15 @@ public class BattleDemoService {
     private void receiveNetMsg() {
         this.netExecutor.submit(() -> {
             while (this.run) {
-                // 每1s收到一条消息并调用lua进行接收
                 for (Map.Entry<Integer, LuaValue> entry : this.fightCoreMap.entrySet()) {
+                    // 模拟消息体和id号
                     int battleId = entry.getKey();
                     LuaValue fightCore = entry.getValue();
                     LuaTable luaTable = new LuaTable();
                     luaTable.set("testKey", "testValue");
                     this.receiveMsgFunction.invoke(new LuaValue[]{fightCore, LuaNumber.valueOf(battleId), LuaNumber.valueOf(battleId), luaTable});
                 }
+                // 每1s收到一条消息并调用lua进行接收
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
