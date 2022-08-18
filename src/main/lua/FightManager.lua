@@ -15,7 +15,7 @@ function IsServer()
     return isServer
 end
 
-require "class"
+require "lib/class"
 require "FightCoreLua"
 
 if IsServer() then
@@ -44,15 +44,6 @@ end
 function CreateFightCore(_battleId)
     ---@type FightCoreLua
     local fightCoreLua = FightCoreLua.New(_battleId)
-
-    if IsClient() then
-        -- 客户端可以使用全局战斗核心
-        ---@type FightCoreLua
-        CLIENT_FIGHT_CORE = fightCoreLua
-        -- 客户端创建完可以直接初始化
-        fightCoreLua:Init()
-    end
-
     return fightCoreLua
 end
 
@@ -64,16 +55,6 @@ function InitFightCore(_fightCoreLua)
     end
     -- 初始化
     _fightCoreLua:Init()
-end
-
--- 初始化战斗房间
----@param battleData table 战斗初始化相关数据
-function InitBattleData(fightCoreLua, battleData)
-    if not fightCoreLua or not battleData or not battleData.battleId then
-        return
-    end
-    -- battleData是战场完整数据，结构是msg.BattleEnterInfo
-    fightCoreLua:InitBattleData(battleData)
 end
 
 ---@type function

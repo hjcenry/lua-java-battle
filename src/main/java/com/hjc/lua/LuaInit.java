@@ -32,4 +32,8 @@ public class LuaInit {
      * lua加载的目录(以英文逗号分割)
      */
     private String luaLoadDirectories;
+    /**
+     * log
+     */
+    private boolean showLog;
 }

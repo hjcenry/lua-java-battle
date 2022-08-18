@@ -4,9 +4,9 @@ import com.hjc.lua.LuaBattlePlatform;
 import com.hjc.lua.exception.LuaException;
 import com.hjc.lua.log.LuaLogTool;
 import com.hjc.util.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.luaj.vm2.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  **/
 public class LuaJEngine implements ILuaJEngine {
 
-    private final Logger log = LoggerFactory.getLogger(LuaJEngine.class);
+    public static Logger log = LogManager.getLogger(LuaJEngine.class);
 
     @Override
     public Globals createLuaGlobals() {
@@ -77,11 +77,9 @@ public class LuaJEngine implements ILuaJEngine {
 
     @Override
     public void logGlobals(Globals globals) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("#%s.print.load.values...", this.getClass().getSimpleName()));
-            for (LuaValue luaKey : globals.keys()) {
-                log.debug(luaKey + "\t:\t" + globals.get(luaKey));
-            }
+        log.info(String.format("#%s.print.load.values...", this.getClass().getSimpleName()));
+        for (LuaValue luaKey : globals.keys()) {
+            log.info(luaKey + "\t:\t" + globals.get(luaKey));
         }
     }
 

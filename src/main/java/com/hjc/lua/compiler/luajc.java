@@ -21,25 +21,20 @@ package com.hjc.lua.compiler;
  * THE SOFTWARE.
  ******************************************************************************/
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.KeyValue;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.KeyValue;
 import org.apache.commons.lang3.StringUtils;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.Lua;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
-
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 /**
  * Compiler for lua files to compile lua sources or lua binaries into java classes.
@@ -79,11 +74,11 @@ public class luajc {
     private final Globals globals;
     private final Logger logger;
 
-    public static void compile(List<KeyValue> keyValues, Logger logger) {
+    public static void compile(List<KeyValue<String, String>> keyValues, Logger logger) {
         new luajc(keyValues, logger);
     }
 
-    private luajc(List<KeyValue> keyValues, Logger logger) {
+    private luajc(List<KeyValue<String, String>> keyValues, Logger logger) {
         this.logger = logger;
 
         // process args
@@ -91,9 +86,9 @@ public class luajc {
 
         // get stateful args
         if (!CollectionUtils.isEmpty(keyValues)) {
-            for (KeyValue keyValue : keyValues) {
-                String key = (String) keyValue.getKey();
-                String value = (String) keyValue.getValue();
+            for (KeyValue<String, String> keyValue : keyValues) {
+                String key = keyValue.getKey();
+                String value = keyValue.getValue();
                 if (!key.startsWith("-")) {
                     seeds.add(key);
                 } else {

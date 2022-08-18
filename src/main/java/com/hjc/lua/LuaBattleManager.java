@@ -4,8 +4,12 @@ import com.hjc.lua.engine.ILuaJEngine;
 import com.hjc.lua.engine.LuaJEngine;
 import com.hjc.util.FileUtil;
 import com.hjc.util.StringUtil;
-import org.apache.commons.collections.CollectionUtils;
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaFunction;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,17 +25,19 @@ import java.util.List;
  **/
 public class LuaBattleManager {
 
-    private Logger logger = LoggerFactory.getLogger(LuaBattleManager.class);
+    private final Logger logger = LoggerFactory.getLogger(LuaBattleManager.class);
 
     private static volatile LuaBattleManager instance;
 
     /**
      * lua全局对象
      */
+    @Getter
     private Globals globals;
     /**
      * lua引擎
      */
+    @Getter
     private ILuaJEngine luaEngine;
 
     private LuaBattleManager() {
@@ -72,7 +78,9 @@ public class LuaBattleManager {
             return;
         }
 
-        this.luaEngine.logGlobals(globals);
+        if (luaInit.isShowLog()) {
+            this.luaEngine.logGlobals(globals);
+        }
         this.globals = globals;
     }
 
@@ -111,4 +119,116 @@ public class LuaBattleManager {
         }
         return loadLuaFileList;
     }
+
+    //===========================================================================================================================================================
+    // 常用对外接口
+    //===========================================================================================================================================================
+
+    /**
+     * 获取Lua方法
+     *
+     * @param luaModule Lua全局对象
+     * @param funcName  方法名
+     * @return Lua方法
+     */
+    public LuaFunction getLuaFunction(LuaValue luaModule, String funcName) {
+        return this.luaEngine.getLuaFunction(luaModule, funcName);
+    }
+
+    /**
+     * 获取lua方法
+     *
+     * @param funcName 方法名
+     * @return lua方法
+     */
+    public LuaFunction getLuaFunction(String funcName) {
+        return this.luaEngine.getLuaFunction(this.globals, funcName);
+    }
+
+    /**
+     * 获取Lua对象
+     *
+     * @param luaObj  Lua全局对象
+     * @param objName 对象名
+     * @return Lua对象
+     */
+    public LuaValue getLuaObj(LuaValue luaObj, String objName) {
+        return this.luaEngine.getLuaObj(luaObj, objName);
+    }
+
+    /**
+     * 调用字符串脚本
+     *
+     * @param script 脚本
+     * @return 脚本返回值
+     */
+    public LuaValue callScript(String script) {
+        return this.luaEngine.callScript(this.globals, script);
+    }
+
+    /**
+     * 调用lua方法
+     * <p>原始调用：无任何封装和规范的方法，可自行发挥</p>
+     *
+     * @param luaModel lua模块
+     * @param varargs  参数
+     * @return {@link Varargs}
+     */
+    public Varargs invokeLua(String luaModel, Varargs varargs) {
+        return this.luaEngine.invokeLua(this.globals, luaModel, varargs);
+    }
+
+    /**
+     * 调用lua方法
+     * <p>原始调用：无任何封装和规范的方法，可自行发挥</p>
+     *
+     * @param luaValue lua对象
+     * @param varargs  参数
+     * @return {@link Varargs}
+     */
+    public Varargs invokeLua(LuaValue luaValue, Varargs varargs) {
+        return this.luaEngine.invokeLua(luaValue, varargs);
+    }
+
+    /**
+     * 初始化lua执行方法
+     * 可按"."分割查找
+     *
+     * @param funcName 方法名
+     * @return lua方法
+     */
+    public LuaFunction initExecuteFunction(String funcName) {
+        // 消息执行方法
+        if (StringUtil.isEmpty(funcName)) {
+            logger.error("lua.init.execute.function.err.null");
+            return null;
+        }
+        // 按“.”分割，支持按模块调用
+        String[] functionFullNameArr = funcName.split(LuaBattleConst.SPLIT_POINT);
+        LuaValue luaModule = globals;
+        String functionName = null;
+        // 遍历模块目录
+        for (int index = 0; index < functionFullNameArr.length; index++) {
+            if (index == functionFullNameArr.length - 1) {
+                // 找出方法名
+                functionName = functionFullNameArr[index];
+                break;
+            }
+            // lua模块
+            luaModule = luaEngine.getLuaObj(luaModule, functionFullNameArr[index]);
+        }
+        if (luaModule == null) {
+            logger.error(String.format("lua.init.execute.function.err.[%s].null", funcName));
+            return null;
+        }
+        LuaFunction luaExecuteFunction = luaEngine.getLuaFunction(luaModule, functionName);
+        if (luaExecuteFunction == null) {
+            logger.error(String.format("lua.init.execute.function.err.[%s].null", funcName));
+            return null;
+        }
+        return luaExecuteFunction;
+    }
+    //===========================================================================================================================================================
+    // 常用对外接口
+    //===========================================================================================================================================================
 }

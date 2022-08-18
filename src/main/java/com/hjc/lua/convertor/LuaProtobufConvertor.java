@@ -7,7 +7,7 @@ import com.google.protobuf.Message;
 import com.hjc.lua.exception.LuaException;
 import com.hjc.util.enumutil.EnumUtil;
 import com.hjc.util.enumutil.IndexedEnum;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.luaj.vm2.LuaBoolean;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;

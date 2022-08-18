@@ -19,4 +19,8 @@ public class LuaBattleConst {
      * lua文件后缀
      */
     public static final String LUA_FILE_EXT = ".lua";
+    /**
+     * 分隔符"."
+     */
+    public static final String SPLIT_POINT = "\\.";
 }

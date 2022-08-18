@@ -2,8 +2,8 @@ package com.hjc.lua.compiler;
 
 import com.google.common.collect.Lists;
 import com.hjc.util.StringUtil;
-import org.apache.commons.collections.KeyValue;
-import org.apache.commons.collections.keyvalue.DefaultKeyValue;
+import org.apache.commons.collections4.KeyValue;
+import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,25 +48,25 @@ public class LuaCompiler {
         if (StringUtil.isEmpty(packageName)) {
             packageName = new File(luaPath).getAbsolutePath().replace(File.separator, "_").replace(":", "");
         }
-        List<KeyValue> keyValues = Lists.newArrayList(
+        List<KeyValue<String, String>> keyValues = Lists.newArrayList(
                 // 包名前缀
-                new DefaultKeyValue("-p", packageName),
+                new DefaultKeyValue<String, String>("-p", packageName),
                 // 递归编译所有
-                new DefaultKeyValue("-r", ""),
+                new DefaultKeyValue<String, String>("-r", ""),
                 // load class验证生成的字节码
-                new DefaultKeyValue("-l", ""),
+                new DefaultKeyValue<String, String>("-l", ""),
                 // 生成class目录
-                new DefaultKeyValue("-d", classPath),
+                new DefaultKeyValue<String, String>("-d", classPath),
                 // lua文件目录
-                new DefaultKeyValue("-s", luaPath),
+                new DefaultKeyValue<String, String>("-s", luaPath),
                 // 忽略的lua文件
-                new DefaultKeyValue("-i", ignores),
+                new DefaultKeyValue<String, String>("-i", ignores),
                 // lua文件目录
-                new DefaultKeyValue("/", "")
+                new DefaultKeyValue<String, String>("/", "")
         );
         if (showLog) {
             // 显示信息
-            keyValues.add(new DefaultKeyValue("-v", ""));
+            keyValues.add(new DefaultKeyValue<String, String>("-v", ""));
         }
 
         // 编译
