@@ -55,12 +55,14 @@ public class LuaServerLibFileConverter extends LuaServerFileConverter {
         serverLibTemplateFile = templateFilePath + serverLibTemplateFile;
 
         // 找出所有ServerLib的文件
+        boolean findFiles = false;
         List<Class<?>> serverLibClassList = Lists.newArrayList();
         for (Class<?> javaClass : ScanUtil.getClasses(javaScanPackage)) {
             LuaServerLib luaServerLib = javaClass.getAnnotation(LuaServerLib.class);
             if (luaServerLib == null) {
                 continue;
             }
+            findFiles = true;
             if (luaServerLib.addToServerLib()) {
                 serverLibClassList.add(javaClass);
             }
@@ -77,6 +79,11 @@ public class LuaServerLibFileConverter extends LuaServerFileConverter {
 
             // 生成lua文件
             generateLuaFile(javaClass, fileDir, className, comment);
+        }
+
+        if (!findFiles) {
+            System.out.println(String.format("包目录[%s]没有找到@LuaServerLib的文件", javaScanPackage));
+            return;
         }
 
         genServerLibLuaFile(serverLibClassList);

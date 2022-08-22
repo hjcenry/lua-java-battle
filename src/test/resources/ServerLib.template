@@ -5,11 +5,15 @@
 ---
 --- 通过Java工具类自动生成，请勿修改，重新生成会被覆盖
 ---
-${COMMENT}
+--- 服务端Java调用库
+
 require "Lib/class"
 
----@class ${NAME} : ${SUPER_CLASS_COMMENT}
-${FILEDS_COMMENTS}${NAME} = class(${SUPER_CLASS}, '${NAME}');
+---@class ServerLib : table
+${FIELDS_COMMENT}ServerLib = class(nil, 'ServerLib');
 
-${CTOR_FUNCTION}
-return ${NAME};
+function ServerLib:ctor()
+${SELF_FIELDS}end
+
+
+

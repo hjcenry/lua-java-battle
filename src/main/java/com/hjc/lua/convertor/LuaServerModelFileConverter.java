@@ -46,12 +46,14 @@ public class LuaServerModelFileConverter extends LuaServerFileConverter {
         initParams();
         templateFile = templateFilePath + File.separator + templateFile;
 
-        // 找出所有ServerLib的文件
+        // 找出所有ServerModel的文件
+        boolean findFiles = false;
         for (Class<?> javaClass : ScanUtil.getClasses(javaScanPackage)) {
             LuaServerModel luaServerModel = javaClass.getAnnotation(LuaServerModel.class);
             if (luaServerModel == null) {
                 continue;
             }
+            findFiles = true;
 
             String javaSimpleName = javaClass.getSimpleName();
             String className = luaServerModel.className();
@@ -66,7 +68,9 @@ public class LuaServerModelFileConverter extends LuaServerFileConverter {
             // 生成lua文件
             generateLuaFile(javaClass, fileDir, className, comment);
         }
-
+        if (!findFiles) {
+            System.out.println(String.format("包目录[%s]没有找到@LuaServerModel的文件", javaScanPackage));
+        }
     }
 
     public static void generateLuaFile(Class<?> javaClz, String fileDir, String className, String comment) {

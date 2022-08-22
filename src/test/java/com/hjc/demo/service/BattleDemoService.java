@@ -1,4 +1,4 @@
-package com.hjc;
+package com.hjc.demo.service;
 
 import com.hjc.lua.LuaBattleManager;
 import com.hjc.lua.LuaInit;
@@ -28,6 +28,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BattleDemoService {
 
     private final Logger logger = LoggerFactory.getLogger(BattleDemoService.class);
+
+    private static final BattleDemoService INSTANCE = new BattleDemoService();
+
+    private BattleDemoService() {
+    }
+
+    public static BattleDemoService getInstance() {
+        return INSTANCE;
+    }
+
     /**
      * 战斗id自增
      */
@@ -39,7 +49,7 @@ public class BattleDemoService {
     /**
      * 战斗核心map
      */
-    private final Map<Integer, LuaValue> fightCoreMap = new ConcurrentHashMap<>();
+    private final Map<Integer, LuaTable> fightCoreMap = new ConcurrentHashMap<>();
 
     /**
      * 是否运行
@@ -50,9 +60,6 @@ public class BattleDemoService {
         BattleDemoService battleDemoService = new BattleDemoService();
         battleDemoService.init();
         battleDemoService.start();
-    }
-
-    public BattleDemoService() {
     }
 
     private void init() throws LuaException {
@@ -124,7 +131,7 @@ public class BattleDemoService {
     public void createFightCore() {
         int battleId = battleIdCounter.getAndIncrement();
         // 创建战斗核心
-        LuaValue fightCore = (LuaValue) this.createFightCoreFunction.invoke(LuaNumber.valueOf(battleId));
+        LuaTable fightCore = (LuaTable) this.createFightCoreFunction.invoke(LuaNumber.valueOf(battleId));
         this.fightCoreMap.put(battleId, fightCore);
         // 初始化战斗核心
         this.initFightCoreFunction.invoke(fightCore);
@@ -157,10 +164,10 @@ public class BattleDemoService {
     private void receiveNetMsg() {
         this.netExecutor.submit(() -> {
             while (this.run) {
-                for (Map.Entry<Integer, LuaValue> entry : this.fightCoreMap.entrySet()) {
+                for (Map.Entry<Integer, LuaTable> entry : this.fightCoreMap.entrySet()) {
                     // 模拟消息体和id号
                     int battleId = entry.getKey();
-                    LuaValue fightCore = entry.getValue();
+                    LuaTable fightCore = entry.getValue();
                     LuaTable luaTable = new LuaTable();
                     luaTable.set("testKey", "testValue");
                     this.receiveMsgFunction.invoke(new LuaValue[]{fightCore, LuaNumber.valueOf(battleId), LuaNumber.valueOf(battleId), luaTable});
@@ -188,9 +195,9 @@ public class BattleDemoService {
         System.out.println(String.format("start.update.for.%d.count", updateNum));
 
         for (int i = 0; i < updateNum; i++) {
-            for (Map.Entry<Integer, LuaValue> entry : this.fightCoreMap.entrySet()) {
+            for (Map.Entry<Integer, LuaTable> entry : this.fightCoreMap.entrySet()) {
                 int battleId = entry.getKey();
-                LuaValue fightCore = entry.getValue();
+                LuaTable fightCore = entry.getValue();
 
                 int index = battleId % this.es.length;
                 this.es[index].submit(() -> {
@@ -215,7 +222,7 @@ public class BattleDemoService {
 
         // 关闭
         System.out.println("start.close.invoke");
-        for (LuaValue fightCore : this.fightCoreMap.values()) {
+        for (LuaTable fightCore : this.fightCoreMap.values()) {
             this.closeFunction.invoke(fightCore);
         }
 
@@ -234,4 +241,13 @@ public class BattleDemoService {
         System.out.println("time : " + (end - start) + "ms");
     }
 
+    /**
+     * 获取战斗核心
+     *
+     * @param battleId 战斗id
+     * @return 战斗核心
+     */
+    public LuaTable getFightCore(int battleId) {
+        return this.fightCoreMap.get(battleId);
+    }
 }

@@ -9,7 +9,9 @@ ${COMMENT}
 require "Lib/class"
 
 ---@class ${NAME} : ${SUPER_CLASS_COMMENT}
-${FILEDS_COMMENTS}${NAME} = class(${SUPER_CLASS}, '${NAME}');
+${NAME} = class(${SUPER_CLASS}, '${NAME}');
 
-${CTOR_FUNCTION}
-return ${NAME};
+function ${NAME}:ctor()
+end
+
+${FUNCTIONS}return ${NAME};

@@ -18,7 +18,7 @@ import java.io.StringWriter;
  * @Date 2021/12/16 11:54
  * @Version 1.0
  **/
-@LuaServerLib(fieldName = "logTool", className = "ServerLogTool", fileDir = "Lib/Server")
+@LuaServerLib(fieldName = "logTool", className = "ServerLogTool", fileDir = "lib")
 public class LuaLogTool {
 
     private static Logger log = LoggerFactory.getLogger(LuaLogTool.class);

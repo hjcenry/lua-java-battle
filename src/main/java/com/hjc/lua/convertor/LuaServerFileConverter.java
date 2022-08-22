@@ -113,6 +113,7 @@ public class LuaServerFileConverter {
             bw.write(content);
             System.out.println("Generate File " + file.getAbsolutePath());
         } catch (IOException e) {
+            System.err.println("[" + luaFile + "]写入文件错误，请检查参数luaRootPath或serverLibFilePath（生成ServerLib时使用）是否正确设置");
             e.printStackTrace();
         }
     }
