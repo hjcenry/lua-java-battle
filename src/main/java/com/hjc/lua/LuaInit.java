@@ -2,6 +2,7 @@ package com.hjc.lua;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.luaj.vm2.Globals;
 
 /**
  * @author hejincheng
@@ -32,6 +33,10 @@ public class LuaInit {
      * lua加载的目录(以英文逗号分割)
      */
     private String luaLoadDirectories;
+    /**
+     * 自定义lua globals
+     */
+    private Globals globals;
     /**
      * log
      */

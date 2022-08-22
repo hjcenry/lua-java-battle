@@ -32,13 +32,8 @@ public class LuaJEngine implements ILuaJEngine {
     @Override
     public Globals createLuaGlobals(String loadPackagePath, String preScript, String... loadFilesPath) {
         Globals globals = LuaBattlePlatform.buildGlobals(loadPackagePath);
-        if (!StringUtil.isEmpty(preScript)) {
-            this.callScript(globals, preScript);
-        }
-        for (String filePath : loadFilesPath) {
-            if (!loadFile(filePath, globals)) {
-                return null;
-            }
+        if (!initGlobals(preScript, loadFilesPath, globals)) {
+            return null;
         }
         return globals;
     }
@@ -46,15 +41,36 @@ public class LuaJEngine implements ILuaJEngine {
     @Override
     public Globals createLuaGlobals(String loadPackagePath, String preScript, List<File> loadFileList) {
         Globals globals = LuaBattlePlatform.buildGlobals(loadPackagePath);
+        if (!initGlobals(preScript, loadFileList, globals)) {
+            return null;
+        }
+        return globals;
+    }
+
+    @Override
+    public boolean initGlobals(String preScript, String[] loadFilesPath, Globals globals) {
+        if (!StringUtil.isEmpty(preScript)) {
+            this.callScript(globals, preScript);
+        }
+        for (String filePath : loadFilesPath) {
+            if (!loadFile(filePath, globals)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean initGlobals(String preScript, List<File> loadFileList, Globals globals) {
         if (!StringUtil.isEmpty(preScript)) {
             this.callScript(globals, preScript);
         }
         for (File file : loadFileList) {
             if (!loadFile(file.getAbsolutePath(), globals)) {
-                return null;
+                return false;
             }
         }
-        return globals;
+        return true;
     }
 
     private boolean loadFile(String loadFilePath, Globals globals) {

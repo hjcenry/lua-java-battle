@@ -47,6 +47,26 @@ public interface ILuaJEngine {
     Globals createLuaGlobals(String loadPackagePath, String preScript, List<File> loadFileList);
 
     /**
+     * 初始化Globals
+     *
+     * @param preScript     预处理脚本
+     * @param loadFilesPath 加载文件list
+     * @param globals       Globals
+     * @return 初始成功
+     */
+    boolean initGlobals(String preScript, String[] loadFilesPath, Globals globals);
+
+    /**
+     * 初始化Globals
+     *
+     * @param preScript    预处理脚本
+     * @param loadFileList 加载文件list
+     * @param globals      Globals
+     * @return 初始成功
+     */
+    boolean initGlobals(String preScript, List<File> loadFileList, Globals globals);
+
+    /**
      * 打印globals
      *
      * @param globals lua全局对象

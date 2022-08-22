@@ -72,9 +72,17 @@ public class LuaBattleManager {
             logger.warn(String.format("lua.init.err.lua.load.files.null \n\troot:\t[%s]\n\tfiles:\t[%s]\n\tdir:\t[%s]",
                     luaInit.getLuaRootPath(), luaInit.getLuaLoadFiles(), luaInit.getLuaLoadDirectories()));
         }
-        Globals globals = luaEngine.createLuaGlobals(packagePath, luaInit.getPreScript(), loadFiles);
+
+        // 创建Globals
+        Globals globals = luaInit.getGlobals() != null ? luaInit.getGlobals() : LuaBattlePlatform.buildGlobals(packagePath);
         if (globals == null) {
             logger.error("lua.init.err.create.globals.err");
+            return;
+        }
+
+        // 初始化Globals
+        if (!luaEngine.initGlobals(luaInit.getPreScript(), loadFiles, globals)) {
+            logger.error("lua.init.err.init.globals.err");
             return;
         }
 
