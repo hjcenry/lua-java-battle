@@ -67,15 +67,15 @@ https://hjcenry.com/lua-java-battle/doc/
 
 ```java
 LuaInit.LuaInitBuilder luaInit=LuaInit.builder();
-        luaInit.preScript("print('Hello Lua Battle!!!')");
+luaInit.preScript("print('Hello Lua Battle!!!')");
 // 设置lua根路径
-        luaInit.luaRootPath("F:\\project\\lua-java-battle\\src\\main\\lua\\");
+luaInit.luaRootPath("F:\\project\\lua-java-battle\\src\\main\\lua\\");
 // 加载lua调用接口目录
-        luaInit.luaLoadDirectories("interface");
+luaInit.luaLoadDirectories("interface");
 // 加载lua主文件
-        luaInit.luaLoadFiles("FightManager.lua");
+luaInit.luaLoadFiles("FightManager.lua");
 // 展示log
-        luaInit.showLog(true);
+luaInit.showLog(true);
 ```
 
 ## 2. 初始化Lua环境
@@ -89,14 +89,14 @@ LuaBattleManager.getInstance().init(luaInit.build());
 ```java
 // 初始所有需要用到的方法
 this.xxxFunction=this.initFunction("XXX.xxx");
-        this.xxxFunction2=this.initFunction("xxx");
+this.xxxFunction2=this.initFunction("xxx");
 ```
 
 ## 4. 调用Lua方法
 
 ```java
 this.xxxFunction.invoke();
-        this.xxxFunction2.invoke(LuaNumber.valueOf(123));
+this.xxxFunction2.invoke(LuaNumber.valueOf(123));
 ```
 
 > `以上是简单的示例这个框架应该如何使用，BattleDemoService中提供了一套比较完成Lua战斗框架的示例`
