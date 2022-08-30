@@ -68,8 +68,6 @@ https://hjcenry.com/lua-java-battle/doc/
 </dependency>
 ```
 
-## 服务端
-
 ## 1. 指定Lua参数
 
 ```java
