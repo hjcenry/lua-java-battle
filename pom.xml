@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>lua-java-battle</name>
-    <description>Java To Lua battle framework based on LuaJ
-    </description>
+    <description>Java To Lua battle framework based on LuaJ</description>
+    <url>https://github.com/hjcenry/lua-java-battle</url>
 
     <groupId>io.github.hjcenry</groupId>
     <artifactId>lua-java-battle</artifactId>
@@ -33,9 +33,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/hjcenry/lua-java-battle.git</url>
-        <connection>https://github.com/hjcenry/lua-java-battle.git</connection>
-        <developerConnection>https://github.com/hjcenry/lua-java-battle.git</developerConnection>
+        <url>https://github.com/hjcenry/lua-java-battle</url>
+        <connection>scm:git:git://github.com/hjcenry/lua-java-battle.git</connection>
+        <developerConnection>scm:git:ssh://github.com/hjcenry/lua-java-battle.git</developerConnection>
     </scm>
 
     <dependencies>
